@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Carnet de Saison — recettes de saison & cuisine adaptée</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF8F1;
+    --ink:#20302A;
+    --ink-soft:#5B6B62;
+    --green:#356B52;
+    --green-deep:#234A3B;
+    --green-soft:#E7EFE7;
+    --peach:#D98556;
+    --peach-deep:#B5673C;
+    --peach-soft:#FBEADD;
+    --line:rgba(32,48,42,0.12);
+    --shadow:0 1px 2px rgba(32,48,42,.05), 0 12px 30px -18px rgba(32,48,42,.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"DM Sans",system-ui,sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+
+  /* ---------- Header ---------- */
+  header.top{padding:46px 0 26px}
+  .brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+  .brand .mark{
+    font-family:"Fraunces",serif;font-weight:600;font-size:clamp(30px,5vw,46px);
+    letter-spacing:-0.02em;line-height:1;color:var(--green-deep);
+  }
+  .brand .mark em{font-style:italic;font-weight:400;color:var(--peach-deep)}
+  .season-chip{
+    display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;
+    color:var(--green-deep);background:var(--green-soft);
+    padding:6px 12px;border-radius:999px;
+  }
+  .season-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+  .tagline{margin-top:14px;color:var(--ink-soft);font-size:16px;max-width:54ch}
+
+  /* ---------- Tabs ---------- */
+  nav.tabs{
+    position:sticky;top:0;z-index:20;background:rgba(251,248,241,.86);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+    margin-top:30px;
+  }
+  .tabs-inner{display:flex;gap:6px;overflow-x:auto;padding:10px 0;scrollbar-width:none}
+  .tabs-inner::-webkit-scrollbar{display:none}
+  .tab{
+    flex:0 0 auto;border:none;background:none;cursor:pointer;font-family:inherit;
+    font-size:15px;font-weight:500;color:var(--ink-soft);
+    padding:9px 16px;border-radius:999px;transition:background .18s,color .18s;white-space:nowrap;
+  }
+  .tab:hover{color:var(--ink)}
+  .tab[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+  .tab .count{opacity:.55;font-weight:400;margin-left:5px;font-size:13px}
+
+  /* ---------- Care banner ---------- */
+  .care{
+    display:none;gap:14px;align-items:flex-start;
+    background:var(--peach-soft);border:1px solid rgba(181,103,60,.18);
+    border-radius:16px;padding:16px 18px;margin:24px 0 4px;
+  }
+  .care.show{display:flex}
+  .care svg{flex:0 0 auto;margin-top:2px}
+  .care p{font-size:14.5px;color:var(--peach-deep);line-height:1.5}
+  .care strong{font-weight:700}
+
+  /* ---------- Grid ---------- */
+  .grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:22px;padding:30px 0 70px;
+  }
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;
+    cursor:pointer;text-align:left;font-family:inherit;color:inherit;padding:0;
+    display:flex;flex-direction:column;transition:transform .22s ease,box-shadow .22s ease;
+    box-shadow:0 1px 2px rgba(32,48,42,.04);
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+  .card:focus-visible{outline:2.5px solid var(--green);outline-offset:3px}
+  .card .top{height:128px;position:relative;display:flex;align-items:flex-end;padding:14px}
+  .card .top svg.motif{position:absolute;right:-12px;top:-10px;opacity:.5}
+  .card .pill{
+    font-size:12px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;
+    background:rgba(255,255,255,.82);padding:5px 10px;border-radius:999px;color:var(--green-deep);
+  }
+  .card.preg .pill{color:var(--peach-deep)}
+  .card .body{padding:16px 18px 20px;display:flex;flex-direction:column;gap:8px;flex:1}
+  .card h3{font-family:"Fraunces",serif;font-weight:500;font-size:20px;line-height:1.2;letter-spacing:-.01em}
+  .card .desc{font-size:14px;color:var(--ink-soft)}
+  .meta{display:flex;gap:14px;margin-top:auto;padding-top:8px;font-size:13px;color:var(--ink-soft)}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+  .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+  .badge{font-size:11.5px;font-weight:500;padding:3px 9px;border-radius:999px;background:var(--peach-soft);color:var(--peach-deep)}
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(20,28,24,.46);z-index:50;
+    display:flex;align-items:flex-end;justify-content:center;
+    opacity:0;pointer-events:none;transition:opacity .2s;padding:0;
+  }
+  .overlay.show{opacity:1;pointer-events:auto}
+  .sheet{
+    background:var(--paper);width:100%;max-width:620px;max-height:92vh;overflow-y:auto;
+    border-radius:22px 22px 0 0;transform:translateY(24px);transition:transform .24s ease;
+  }
+  .overlay.show .sheet{transform:translateY(0)}
+  .sheet .hero{height:96px;display:flex;align-items:flex-end;padding:16px 22px;position:relative}
+  .sheet .hero svg.motif{position:absolute;right:6px;top:-6px;opacity:.55}
+  .close{
+    position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;
+    border:none;background:rgba(255,255,255,.85);cursor:pointer;font-size:18px;color:var(--ink);
+    display:grid;place-items:center;line-height:1;
+  }
+  .sheet-body{padding:20px 24px 40px}
+  .sheet-body h2{font-family:"Fraunces",serif;font-weight:600;font-size:27px;line-height:1.15;letter-spacing:-.015em}
+  .sheet-body .sub{color:var(--ink-soft);font-size:15px;margin-top:6px}
+  .stat-row{display:flex;gap:22px;margin:18px 0;flex-wrap:wrap}
+  .stat{display:flex;flex-direction:column}
+  .stat b{font-family:"Fraunces",serif;font-weight:500;font-size:18px}
+  .stat small{color:var(--ink-soft);font-size:12.5px;text-transform:uppercase;letter-spacing:.04em}
+  .why{background:var(--peach-soft);border-radius:14px;padding:15px 17px;margin:6px 0 20px}
+  .why h4{color:var(--peach-deep);font-size:13px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+  .why p{font-size:14.5px;color:var(--peach-deep)}
+  .sheet h5{
+    font-family:"DM Sans";font-weight:700;font-size:13px;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--green-deep);margin:26px 0 12px;
+  }
+  .card.preg ~ * .sheet h5, .sheet.preg h5{color:var(--peach-deep)}
+  ul.ing{list-style:none;display:flex;flex-direction:column;gap:2px}
+  ul.ing li{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:15px}
+  ul.ing li .q{flex:0 0 92px;font-weight:500;color:var(--ink)}
+  ol.steps{list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:16px}
+  ol.steps li{counter-increment:s;display:flex;gap:14px;font-size:15px;line-height:1.5}
+  ol.steps li::before{
+    content:counter(s);flex:0 0 28px;height:28px;border-radius:50%;
+    background:var(--green-soft);color:var(--green-deep);display:grid;place-items:center;
+    font-weight:700;font-size:14px;font-family:"Fraunces",serif;
+  }
+  .sheet.preg ol.steps li::before{background:var(--peach-soft);color:var(--peach-deep)}
+  .tip{font-size:14px;color:var(--ink-soft);border-left:3px solid var(--green);padding:4px 0 4px 14px;margin-top:8px}
+  .sheet.preg .tip{border-color:var(--peach)}
+
+  footer{border-top:1px solid var(--line);padding:26px 0 60px;color:var(--ink-soft);font-size:13.5px}
+  footer a{color:var(--green-deep)}
+
+  @media(min-width:560px){
+    .overlay{align-items:center;padding:20px}
+    .sheet{border-radius:22px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{transition:none!important;scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="mark">Le Carnet <em>de Saison</em></span>
+      <span class="season-chip"><span class="dot"></span><span id="seasonLabel">Été · Juin</span></span>
+    </div>
+    <p class="tagline">Des recettes simples au rythme des saisons, et une sélection de plats pensés pour la grossesse — bien cuits, équilibrés, gourmands.</p>
+  </header>
+</div>
+
+<nav class="tabs">
+  <div class="wrap">
+    <div class="tabs-inner" role="tablist" aria-label="Catégories de recettes">
+      <button class="tab" role="tab" data-filter="all" aria-selected="true">Toutes <span class="count" id="cAll"></span></button>
+      <button class="tab" role="tab" data-filter="saison" aria-selected="false">De saison <span class="count" id="cSaison"></span></button>
+      <button class="tab" role="tab" data-filter="preg" aria-selected="false">Femme enceinte <span class="count" id="cPreg"></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="care" id="careBanner">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B5673C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg>
+    <p><strong>À garder en tête.</strong> Ces recettes privilégient les aliments bien cuits et les produits pasteurisés. Les besoins varient d'une grossesse à l'autre — confirmez les aliments adaptés à votre situation avec votre sage-femme ou votre médecin.</p>
+  </div>
+
+  <main class="grid" id="grid" aria-live="polite"></main>
+</div>
+
+<footer>
+  <div class="wrap">Le Carnet de Saison · sélection mise à jour en juin. Lavez soigneusement fruits et légumes avant préparation.</div>
+</footer>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<script>
+/* ---------- Motifs (SVG décoratifs, une couleur) ---------- */
+const motif = {
+  leaf:'<path d="M70 8C40 10 14 30 12 64c30 4 56-16 58-56z" fill="currentColor"/><path d="M22 56C40 40 56 26 66 14" stroke="rgba(255,255,255,.5)" stroke-width="2" fill="none"/>',
+  sun:'<circle cx="44" cy="40" r="20" fill="currentColor"/><g stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M44 6v8M44 66v8M10 40h8M70 40h8M20 16l6 6M62 58l6 6M68 16l-6 6M26 58l-6 6"/></g>',
+  tomato:'<circle cx="42" cy="46" r="22" fill="currentColor"/><path d="M42 24c-4-8-12-10-12-10 4 6 4 10 4 10M42 24c4-8 12-9 12-9-4 5-5 9-5 9" stroke="rgba(255,255,255,.55)" stroke-width="3" fill="none" stroke-linecap="round"/>',
+  fish:'<path d="M12 40c16-22 44-22 60 0-16 22-44 22-60 0z" fill="currentColor"/><circle cx="30" cy="36" r="3" fill="rgba(255,255,255,.7)"/><path d="M72 40l12-12v24z" fill="currentColor"/>',
+  wheat:'<path d="M42 72V20" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><g fill="currentColor"><ellipse cx="34" cy="30" rx="6" ry="10"/><ellipse cx="50" cy="30" rx="6" ry="10"/><ellipse cx="34" cy="46" rx="6" ry="10"/><ellipse cx="50" cy="46" rx="6" ry="10"/></g>',
+  bowl:'<path d="M14 38h60c0 18-14 30-30 30S14 56 14 38z" fill="currentColor"/><path d="M30 26c0-6 4-8 4-12M44 26c0-6 4-8 4-12" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-linecap="round" fill="none"/>',
+  egg:'<ellipse cx="44" cy="44" rx="22" ry="28" fill="currentColor"/><circle cx="44" cy="48" r="9" fill="rgba(255,255,255,.65)"/>'
+};
+function svgMotif(name){return '<svg class="motif" width="96" height="84" viewBox="0 0 96 84">'+motif[name]+'</svg>';}
+
+/* ---------- Données recettes ---------- */
+const recipes = [
+  /* ===== DE SAISON ===== */
+  {
+    cat:'saison', tag:'De saison', motif:'leaf', color:'linear-gradient(135deg,#9DC3A5,#5E9A78)',
+    title:'Salade de courgettes grillées, pois chiches & menthe',
+    desc:'Fraîche, rassasiante, prête en 20 minutes. Le plat parfait des soirs d\'été.',
+    time:'20 min', serves:'2 pers.', diff:'Facile',
+    ingredients:[
+      ['2','courgettes moyennes'],['1 boîte','pois chiches (240 g égouttés)'],
+      ['80 g','féta'],['1 poignée','menthe fraîche ciselée'],
+      ['1','citron (jus + zeste)'],['2 c. à s.','huile d\'olive'],
+      ['1','gousse d\'ail râpée'],['1 c. à s.','graines de tournesol'],['','sel, poivre']
+    ],
+    steps:[
+      'Taillez les courgettes en rubans ou en demi-lunes. Faites-les griller à la poêle bien chaude avec un filet d\'huile, 3–4 min par face, jusqu\'à coloration.',
+      'Mélangez le jus et le zeste de citron, l\'huile d\'olive, l\'ail, du sel et du poivre.',
+      'Réunissez courgettes tièdes, pois chiches et menthe, arrosez de vinaigrette.',
+      'Émiettez la féta par-dessus, parsemez de graines de tournesol et servez aussitôt.'
+    ],
+    tip:'Astuce : ajoutez une pincée de piment d\'Espelette pour relever le tout.'
+  },
+  {
+    cat:'saison', tag:'De saison', motif:'tomato', color:'linear-gradient(135deg,#E8A07C,#D2613F)',
+    title:'Gaspacho de tomates & poivron',
+    desc:'La soupe froide qui sent l\'été. À préparer la veille pour plus de saveur.',
+    time:'15 min + frais', serves:'4 pers.', diff:'Facile',
+    ingredients:[
+      ['1 kg','tomates bien mûres'],['1','poivron rouge'],['1/2','concombre'],
+      ['1','petite gousse d\'ail'],['1 tranche','pain rassis (trempée)'],
+      ['3 c. à s.','huile d\'olive'],['1 c. à s.','vinaigre de Xérès'],['','sel']
+    ],
+    steps:[
+      'Lavez puis coupez grossièrement tomates, poivron et concombre.',
+      'Mixez tous les ingrédients très finement jusqu\'à obtenir une texture lisse.',
+      'Rectifiez l\'assaisonnement, puis filtrez si vous aimez une texture veloutée.',
+      'Réservez au moins 2 h au réfrigérateur. Servez bien frais, avec un filet d\'huile d\'olive.'
+    ],
+    tip:'Astuce : quelques dés de concombre et de pain grillé en topping pour le croquant.'
+  },
+  {
+    cat:'saison', tag:'De saison', motif:'sun', color:'linear-gradient(135deg,#F0C27B,#D98C3D)',
+    title:'Tarte rustique aux abricots & amandes',
+    desc:'Les abricots de juin dans une pâte dorée. Le dessert d\'été sans chichi.',
+    time:'45 min', serves:'6 pers.', diff:'Moyen',
+    ingredients:[
+      ['1','pâte brisée'],['600 g','abricots frais'],['3 c. à s.','poudre d\'amandes'],
+      ['2 c. à s.','sucre'],['1 noisette','beurre'],['1','jaune d\'œuf (dorure)'],['1 c. à s.','amandes effilées']
+    ],
+    steps:[
+      'Préchauffez le four à 200 °C. Étalez la pâte sur une plaque, en gardant un bord de 4 cm.',
+      'Saupoudrez le centre de poudre d\'amandes (elle absorbera le jus des fruits).',
+      'Lavez, dénoyautez et coupez les abricots en deux. Disposez-les en rosace, saupoudrez de sucre.',
+      'Repliez les bords, dorez au jaune d\'œuf, parsemez d\'amandes effilées.',
+      'Enfournez 30–35 min jusqu\'à ce que la pâte soit bien dorée. Servez tiède.'
+    ],
+    tip:'Astuce : un brin de romarin émincé dans le sucre apporte une touche surprenante.'
+  },
+
+  /* ===== FEMME ENCEINTE ===== */
+  {
+    cat:'preg', tag:'Femme enceinte', motif:'fish', color:'linear-gradient(135deg,#E7A77E,#C56F40)',
+    title:'Saumon rôti bien cuit, lentilles & épinards',
+    desc:'Un plat complet, riche en oméga-3, fer et folates — pensé pour la grossesse.',
+    time:'30 min', serves:'2 pers.', diff:'Facile',
+    badges:['Poisson bien cuit','Riche en oméga-3','Fer + folates'],
+    why:'Le saumon cuit à cœur apporte des oméga-3 importants pour le développement du bébé, sans le risque lié au poisson cru. Lentilles et épinards couvrent le fer et les folates (vitamine B9), particulièrement utiles pendant la grossesse.',
+    ingredients:[
+      ['2','pavés de saumon frais'],['200 g','lentilles vertes'],['2 poignées','jeunes épinards'],
+      ['1','citron'],['1','échalote'],['1 c. à s.','huile d\'olive'],['','sel, poivre, persil']
+    ],
+    steps:[
+      'Rincez les lentilles, couvrez d\'eau froide et cuisez 25 min à frémissement. Égouttez.',
+      'Faites suer l\'échalote ciselée dans l\'huile, ajoutez les épinards lavés jusqu\'à ce qu\'ils tombent, puis les lentilles.',
+      'Cuisez le saumon au four (200 °C, 12–14 min) ou à la poêle, jusqu\'à ce que la chair soit opaque et se détache à la fourchette — bien cuit à cœur.',
+      'Dressez le saumon sur les lentilles, arrosez de jus de citron et parsemez de persil.'
+    ],
+    tip:'Sécurité : le saumon doit être cuit à cœur (chair opaque, non translucide). Évitez la version mi-cuite pendant la grossesse.'
+  },
+  {
+    cat:'preg', tag:'Femme enceinte', motif:'bowl', color:'linear-gradient(135deg,#EBB48A,#CF8050)',
+    title:'Poulet rôti, quinoa & légumes du marché',
+    desc:'Un plat-bol équilibré et réconfortant, à base de protéines bien cuites.',
+    time:'40 min', serves:'2 pers.', diff:'Facile',
+    badges:['Volaille bien cuite','Protéines + fer','Repas complet'],
+    why:'Le poulet bien cuit (sans rosé) est une source sûre de protéines et de fer. Le quinoa complète l\'apport en protéines végétales et en fer, pour un repas équilibré qui cale durablement.',
+    ingredients:[
+      ['2','filets de poulet'],['150 g','quinoa'],['1','courgette'],['1','poivron'],
+      ['1','carotte'],['2 c. à s.','huile d\'olive'],['','herbes, sel, poivre']
+    ],
+    steps:[
+      'Rincez le quinoa, cuisez-le 12–15 min dans 2 volumes d\'eau jusqu\'à absorption.',
+      'Coupez les légumes lavés en morceaux, mélangez-les à l\'huile et aux herbes, rôtissez 20 min à 200 °C.',
+      'Cuisez le poulet (poêle ou four) jusqu\'à ce que la chair soit blanche à cœur, sans aucune trace rosée et le jus clair.',
+      'Tranchez le poulet, dressez sur le quinoa et les légumes rôtis.'
+    ],
+    tip:'Sécurité : la volaille doit être cuite à cœur (74 °C, plus aucune partie rosée).'
+  },
+  {
+    cat:'preg', tag:'Femme enceinte', motif:'egg', color:'linear-gradient(135deg,#EFC79B,#D69A5E)',
+    title:'Omelette aux épinards & féta pasteurisée',
+    desc:'Express, riche en folates, idéale les jours où l\'on veut quelque chose de doux.',
+    time:'12 min', serves:'1 pers.', diff:'Très facile',
+    badges:['Œufs bien cuits','Lait pasteurisé','Riche en folates'],
+    why:'Les épinards apportent des folates précieux en début de grossesse, et les œufs bien cuits une protéine sûre et rassasiante. La féta utilisée doit être au lait pasteurisé — vérifiez la mention sur l\'emballage.',
+    ingredients:[
+      ['3','œufs'],['1 poignée','épinards frais'],['40 g','féta au lait pasteurisé'],
+      ['1 noisette','beurre'],['','sel, poivre, ciboulette']
+    ],
+    steps:[
+      'Battez les œufs avec sel et poivre. Lavez soigneusement les épinards.',
+      'Faites fondre le beurre, jetez-y les épinards 1 min jusqu\'à ce qu\'ils tombent.',
+      'Versez les œufs, ajoutez la féta émiettée. Cuisez à feu moyen jusqu\'à ce que l\'omelette soit prise — pas baveuse.',
+      'Pliez, parsemez de ciboulette et servez aussitôt.'
+    ],
+    tip:'Sécurité : pendant la grossesse, cuisez les œufs jusqu\'à ce que le blanc et le jaune soient bien fermes. Choisissez un fromage au lait pasteurisé.'
+  }
+];
+
+/* ---------- Rendu ---------- */
+const grid = document.getElementById('grid');
+const tabs = [...document.querySelectorAll('.tab')];
+const care = document.getElementById('careBanner');
+let current = 'all';
+
+document.getElementById('cAll').textContent = recipes.length;
+document.getElementById('cSaison').textContent = recipes.filter(r=>r.cat==='saison').length;
+document.getElementById('cPreg').textContent = recipes.filter(r=>r.cat==='preg').length;
+
+function render(){
+  const list = recipes.filter(r=>current==='all'||r.cat===current);
+  grid.innerHTML = list.map((r,i)=>{
+    const idx = recipes.indexOf(r);
+    const badges = r.badges ? '<div class="badges">'+r.badges.map(b=>'<span class="badge">'+b+'</span>').join('')+'</div>' : '';
+    return `<button class="card ${r.cat==='preg'?'preg':''}" data-i="${idx}">
+      <div class="top" style="background:${r.color}">
+        ${svgMotif(r.motif).replace('class="motif"','class="motif" style="color:rgba(255,255,255,.85)"')}
+        <span class="pill">${r.tag}</span>
+      </div>
+      <div class="body">
+        <h3>${r.title}</h3>
+        <p class="desc">${r.desc}</p>
+        ${badges}
+        <div class="meta"><span>⏱ ${r.time}</span><span>🍽 ${r.serves}</span></div>
+      </div>
+    </button>`;
+  }).join('');
+  care.classList.toggle('show', current==='preg');
+}
+
+tabs.forEach(t=>t.addEventListener('click',()=>{
+  tabs.forEach(x=>x.setAttribute('aria-selected','false'));
+  t.setAttribute('aria-selected','true');
+  current = t.dataset.filter;
+  render();
+}));
+
+/* ---------- Modal ---------- */
+const overlay = document.getElementById('overlay');
+const sheet = document.getElementById('sheet');
+
+grid.addEventListener('click',e=>{
+  const card = e.target.closest('.card');
+  if(!card) return;
+  openRecipe(recipes[+card.dataset.i]);
+});
+
+function openRecipe(r){
+  const preg = r.cat==='preg';
+  sheet.className = 'sheet'+(preg?' preg':'');
+  const why = r.why ? `<div class="why"><h4>Pourquoi c'est recommandé</h4><p>${r.why}</p></div>` : '';
+  sheet.innerHTML = `
+    <div class="hero" style="background:${r.color}">
+      ${svgMotif(r.motif).replace('class="motif"','class="motif" style="color:rgba(255,255,255,.85)"')}
+      <button class="close" id="closeBtn" aria-label="Fermer">×</button>
+      <span class="pill">${r.tag}</span>
+    </div>
+    <div class="sheet-body">
+      <h2 id="sheetTitle">${r.title}</h2>
+      <p class="sub">${r.desc}</p>
+      <div class="stat-row">
+        <div class="stat"><b>${r.time}</b><small>Préparation</small></div>
+        <div class="stat"><b>${r.serves}</b><small>Portions</small></div>
+        <div class="stat"><b>${r.diff}</b><small>Difficulté</small></div>
+      </div>
+      ${why}
+      <h5>Ingrédients</h5>
+      <ul class="ing">${r.ingredients.map(([q,n])=>`<li><span class="q">${q}</span><span>${n}</span></li>`).join('')}</ul>
+      <h5>Préparation</h5>
+      <ol class="steps">${r.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+      ${r.tip?`<p class="tip">${r.tip}</p>`:''}
+    </div>`;
+  overlay.classList.add('show');
+  document.body.style.overflow='hidden';
+  document.getElementById('closeBtn').addEventListener('click',closeRecipe);
+  sheet.scrollTop = 0;
+}
+function closeRecipe(){overlay.classList.remove('show');document.body.style.overflow='';}
+overlay.addEventListener('click',e=>{if(e.target===overlay)closeRecipe();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeRecipe();});
+
+/* ---------- Saison dynamique ---------- */
+(function(){
+  const m=new Date().getMonth();
+  const seasons=[['Hiver','Janvier'],['Hiver','Février'],['Printemps','Mars'],['Printemps','Avril'],
+    ['Printemps','Mai'],['Été','Juin'],['Été','Juillet'],['Été','Août'],
+    ['Automne','Septembre'],['Automne','Octobre'],['Automne','Novembre'],['Hiver','Décembre']];
+  document.getElementById('seasonLabel').textContent = seasons[m][0]+' · '+seasons[m][1];
+})();
+
+render();
+</script>
+</body>
+</html>
