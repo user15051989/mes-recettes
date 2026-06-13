@@ -76,6 +76,19 @@
   .care p{font-size:14.5px;color:var(--peach-deep);line-height:1.5}
   .care strong{font-weight:700}
 
+  /* ---------- Search ---------- */
+  .search{margin:24px 0 0;position:relative}
+  .search input{
+    width:100%;font-family:inherit;font-size:16px;color:var(--ink);
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:13px 16px 13px 44px;transition:border-color .18s,box-shadow .18s;
+  }
+  .search input::placeholder{color:var(--ink-soft)}
+  .search input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(53,107,82,.12)}
+  .search svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);pointer-events:none}
+  .empty{padding:50px 10px;text-align:center;color:var(--ink-soft);font-size:15.5px}
+  .empty b{display:block;font-family:"Fraunces",serif;font-weight:500;font-size:19px;color:var(--ink);margin-bottom:6px}
+
   /* ---------- Grid ---------- */
   .grid{
     display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
@@ -182,11 +195,17 @@
       <button class="tab" role="tab" data-filter="all" aria-selected="true">Toutes <span class="count" id="cAll"></span></button>
       <button class="tab" role="tab" data-filter="saison" aria-selected="false">De saison <span class="count" id="cSaison"></span></button>
       <button class="tab" role="tab" data-filter="preg" aria-selected="false">Femme enceinte <span class="count" id="cPreg"></span></button>
+      <button class="tab" role="tab" data-filter="monde" aria-selected="false">Du monde <span class="count" id="cMonde"></span></button>
     </div>
   </div>
 </nav>
 
 <div class="wrap">
+  <div class="search">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B6B62" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="search" id="search" placeholder="Rechercher une recette ou un ingrédient…" aria-label="Rechercher une recette ou un ingrédient">
+  </div>
+
   <div class="care" id="careBanner">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B5673C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg>
     <p><strong>À garder en tête.</strong> Ces recettes privilégient les aliments bien cuits et les produits pasteurisés. Les besoins varient d'une grossesse à l'autre — confirmez les aliments adaptés à votre situation avec votre sage-femme ou votre médecin.</p>
@@ -274,6 +293,95 @@ const recipes = [
     ],
     tip:'Astuce : un brin de romarin émincé dans le sucre apporte une touche surprenante.'
   },
+  {
+    cat:'saison', tag:'De saison', motif:'tomato', color:'linear-gradient(135deg,#A7C9A0,#5C9466)',
+    title:'Salade caprese tomates & mozzarella',
+    desc:'Le grand classique de l\'été : trois ingrédients, dix minutes, beaucoup de soleil.',
+    time:'10 min', serves:'2 pers.', diff:'Très facile',
+    ingredients:[
+      ['3','tomates bien mûres'],['250 g','mozzarella (2 boules)'],['1 poignée','basilic frais'],
+      ['3 c. à s.','huile d\'olive'],['1 filet','vinaigre balsamique'],['','fleur de sel, poivre']
+    ],
+    steps:[
+      'Lavez les tomates et coupez-les en tranches épaisses. Égouttez la mozzarella et tranchez-la de la même épaisseur.',
+      'Disposez en alternance tomate et mozzarella sur un plat, en intercalant les feuilles de basilic.',
+      'Arrosez d\'huile d\'olive et d\'un filet de balsamique, salez à la fleur de sel et poivrez.',
+      'Laissez reposer 5 min à température ambiante avant de servir, pour que les saveurs se libèrent.'
+    ],
+    tip:'Astuce : une mozzarella di bufala apporte plus de crémeux. Crue et froide, la mozzarella n\'est pas conseillée pendant la grossesse (recommandations suisses) — préférez-la alors bien cuite, comme dans le gratin.'
+  },
+  {
+    cat:'saison', tag:'De saison', motif:'leaf', color:'linear-gradient(135deg,#9DC3A5,#5E9A78)',
+    title:'Gratin de courgettes & mozzarella',
+    desc:'Fondant, doré, réconfortant. La courgette de saison sous une couche gratinée.',
+    time:'45 min', serves:'4 pers.', diff:'Facile',
+    ingredients:[
+      ['4','courgettes'],['250 g','mozzarella'],['400 g','coulis de tomate'],
+      ['40 g','parmesan râpé'],['1','gousse d\'ail'],['2 c. à s.','huile d\'olive'],['','basilic, sel, poivre']
+    ],
+    steps:[
+      'Préchauffez le four à 200 °C. Lavez et taillez les courgettes en rondelles.',
+      'Faites-les revenir 8 min à la poêle avec l\'huile et l\'ail haché, jusqu\'à ce qu\'elles soient tendres. Salez, poivrez.',
+      'Étalez un peu de coulis au fond d\'un plat, ajoutez les courgettes, le reste du coulis, puis la mozzarella égouttée et coupée en morceaux.',
+      'Parsemez de parmesan et enfournez 20–25 min, jusqu\'à ce que le dessus soit doré et bouillonnant.',
+      'Parsemez de basilic frais à la sortie du four et servez chaud.'
+    ],
+    tip:'Astuce : bien cuit et au lait pasteurisé, ce gratin convient aussi pendant la grossesse.'
+  },
+  {
+    cat:'saison', tag:'De saison', motif:'bowl', color:'linear-gradient(135deg,#9DC3A5,#5E9A78)',
+    title:'Bol protéiné d\'été, pois chiches & légumes grillés',
+    desc:'La tendance « bowl » version estivale : nourrissant, coloré, prêt en 25 minutes.',
+    time:'25 min', serves:'2 pers.', diff:'Facile',
+    ingredients:[
+      ['1 boîte','pois chiches (240 g égouttés)'],['120 g','quinoa'],['1','courgette'],
+      ['1','poivron'],['1 poignée','tomates cerises'],['150 g','yaourt grec'],
+      ['1','citron'],['1','gousse d\'ail'],['2 c. à s.','huile d\'olive'],['','menthe, sel, poivre']
+    ],
+    steps:[
+      'Rincez le quinoa et cuisez-le 12–15 min dans 2 volumes d\'eau, jusqu\'à absorption. Laissez tiédir.',
+      'Taillez courgette et poivron en morceaux, faites-les griller 8 min à la poêle bien chaude avec un peu d\'huile.',
+      'Préparez la sauce : mélangez le yaourt, l\'ail râpé, le jus de citron, du sel et du poivre.',
+      'Répartissez quinoa, pois chiches, légumes grillés et tomates cerises coupées dans deux bols. Nappez de sauce et parsemez de menthe.'
+    ],
+    tip:'Astuce : ajoutez des graines de courge pour le croquant et un surplus de protéines.'
+  },
+  {
+    cat:'saison', tag:'De saison', motif:'sun', color:'linear-gradient(135deg,#A7C9A0,#5C9466)',
+    title:'Légumes & halloumi grillés à la plancha',
+    desc:'La cuisine au feu, tendance de l\'été : halloumi doré et légumes croquants.',
+    time:'20 min', serves:'2 pers.', diff:'Facile',
+    ingredients:[
+      ['250 g','halloumi'],['1','courgette'],['1','poivron'],['1','petite aubergine'],
+      ['1','oignon rouge'],['2 c. à s.','huile d\'olive'],['1','citron'],['','origan, sel, poivre']
+    ],
+    steps:[
+      'Taillez tous les légumes lavés en tranches épaisses et l\'oignon en quartiers. Enrobez-les d\'huile, salez, poivrez.',
+      'Coupez le halloumi en tranches d\'1 cm.',
+      'Sur une plancha ou un gril très chaud, saisissez les légumes 3–4 min par face jusqu\'à belles marques de cuisson.',
+      'Grillez le halloumi 1–2 min par face, juste jusqu\'à ce qu\'il soit doré et fondant. Arrosez de jus de citron, parsemez d\'origan et servez.'
+    ],
+    tip:'Astuce : bien grillé (donc bien cuit) et au lait pasteurisé, le halloumi convient aussi pendant la grossesse.'
+  },
+  {
+    cat:'saison', tag:'De saison', motif:'wheat', color:'linear-gradient(135deg,#9DC3A5,#5E9A78)',
+    title:'Focaccia maison aux tomates cerises & romarin',
+    desc:'Moelleuse, dorée, parfumée : le pain plat italien qui fait l\'unanimité à l\'apéro.',
+    time:'25 min + repos', serves:'6 parts', diff:'Moyen',
+    ingredients:[
+      ['400 g','farine'],['260 ml','eau tiède'],['7 g','levure de boulanger sèche'],
+      ['4 c. à s.','huile d\'olive'],['8 g','sel'],['1 poignée','tomates cerises'],
+      ['2 brins','romarin'],['','fleur de sel']
+    ],
+    steps:[
+      'Mélangez farine, sel et levure. Ajoutez l\'eau tiède et 2 c. à s. d\'huile, puis travaillez en une pâte souple.',
+      'Couvrez et laissez lever 1 h à température ambiante, jusqu\'à ce que la pâte double de volume.',
+      'Étalez la pâte dans un plat huilé. Du bout des doigts, creusez des petits trous sur toute la surface.',
+      'Enfoncez les tomates cerises coupées en deux, arrosez du reste d\'huile, parsemez de romarin et de fleur de sel.',
+      'Enfournez 20–22 min à 220 °C, jusqu\'à ce que la focaccia soit bien dorée. Servez tiède.'
+    ],
+    tip:'Astuce : un peu d\'eau dans le four pendant la cuisson la rend encore plus moelleuse.'
+  },
 
   /* ===== FEMME ENCEINTE ===== */
   {
@@ -332,6 +440,235 @@ const recipes = [
       'Pliez, parsemez de ciboulette et servez aussitôt.'
     ],
     tip:'Sécurité : pendant la grossesse, cuisez les œufs jusqu\'à ce que le blanc et le jaune soient bien fermes. Choisissez un fromage au lait pasteurisé.'
+  },
+  {
+    cat:'preg', tag:'Femme enceinte', motif:'bowl', color:'linear-gradient(135deg,#EBB48A,#CF8050)',
+    title:'Salade de lentilles, tomates & herbes fraîches',
+    desc:'Fraîche, tendance et 100 % végétale — riche en fer et en folates, taillée pour la grossesse.',
+    time:'30 min', serves:'2 pers.', diff:'Facile',
+    badges:['Riche en fer','Folates','100 % végétal'],
+    why:'Les lentilles sont une excellente source de fer et de folates (vitamine B9), deux nutriments clés pendant la grossesse. Cette salade ne contient ni produit animal cru ni fromage à pâte molle : pensez simplement à bien laver les crudités.',
+    ingredients:[
+      ['200 g','lentilles vertes'],['1 poignée','tomates cerises'],['1/2','concombre'],
+      ['1/4','oignon rouge'],['1 botte','persil + menthe'],['1','citron'],
+      ['2 c. à s.','huile d\'olive'],['1 c. à c.','moutarde'],['','sel, poivre']
+    ],
+    steps:[
+      'Rincez les lentilles, couvrez d\'eau froide et cuisez 25 min à frémissement. Égouttez et laissez tiédir.',
+      'Lavez soigneusement tomates, concombre et herbes. Coupez tomates et concombre en dés, émincez l\'oignon et ciselez les herbes.',
+      'Préparez la vinaigrette : citron, huile d\'olive, moutarde, sel et poivre.',
+      'Mélangez lentilles, légumes et herbes, assaisonnez et servez frais.'
+    ],
+    tip:'Sécurité : lavez bien toutes les crudités. Évitez d\'y ajouter un fromage à pâte molle cru pendant la grossesse.'
+  },
+
+  /* ===== DU MONDE ===== */
+  {
+    cat:'monde', tag:'États-Unis', motif:'wheat', color:'linear-gradient(135deg,#E0B27C,#B07A3D)',
+    title:'Cookies américains aux pépites de chocolat',
+    desc:'Le grand classique : bords croustillants, cœur moelleux, pépites fondantes.',
+    time:'25 min', serves:'18 cookies', diff:'Facile',
+    ingredients:[
+      ['150 g','beurre mou'],['120 g','sucre roux'],['60 g','sucre blanc'],['1','œuf'],
+      ['1 c. à c.','extrait de vanille'],['220 g','farine'],['1/2 c. à c.','bicarbonate'],
+      ['1 pincée','sel'],['200 g','pépites de chocolat']
+    ],
+    steps:[
+      'Préchauffez le four à 190 °C. Fouettez le beurre mou avec les deux sucres jusqu\'à obtenir une crème.',
+      'Ajoutez l\'œuf et la vanille, mélangez.',
+      'Incorporez la farine, le bicarbonate et le sel, sans trop travailler la pâte. Ajoutez les pépites.',
+      'Façonnez des boules espacées sur une plaque. Enfournez 10–12 min : les bords doivent être dorés, le centre encore tendre.',
+      'Laissez refroidir 5 min sur la plaque avant de les déplacer — ils finissent de prendre en refroidissant.'
+    ],
+    tip:'Astuce : 30 min de pâte au frais avant cuisson donnent des cookies plus épais.'
+  },
+  {
+    cat:'monde', tag:'États-Unis', motif:'bowl', color:'linear-gradient(135deg,#E8C06A,#C98E33)',
+    title:'Cuisses de poulet au miel & à l\'ail',
+    desc:'La recette qui cartonne en 2026 : ultra-simple, sauce sucrée-salée irrésistible.',
+    time:'30 min', serves:'4 pers.', diff:'Très facile',
+    ingredients:[
+      ['8','hauts de cuisse de poulet'],['4 c. à s.','miel'],['4','gousses d\'ail'],
+      ['3 c. à s.','sauce soja'],['1 c. à s.','vinaigre'],['1 c. à s.','huile'],['','poivre']
+    ],
+    steps:[
+      'Saisissez les cuisses côté peau dans l\'huile chaude, 4–5 min, jusqu\'à coloration. Retournez-les.',
+      'Mélangez miel, ail haché, sauce soja et vinaigre, versez sur le poulet.',
+      'Couvrez et laissez cuire 15 min à feu moyen, en arrosant, jusqu\'à ce que la chair soit cuite à cœur (plus aucune trace rosée).',
+      'Découvrez et laissez la sauce réduire 2–3 min en sirop brillant. Servez avec du riz.'
+    ],
+    tip:'Astuce : bien cuit à cœur, ce plat convient aussi pendant la grossesse.'
+  },
+  {
+    cat:'monde', tag:'Vietnam', motif:'leaf', color:'linear-gradient(135deg,#7FBFB0,#36897C)',
+    title:'Gỏi cuốn — rouleaux de printemps frais',
+    desc:'Frais, légers, à rouler soi-même : le plat d\'été vietnamien par excellence.',
+    time:'40 min', serves:'4 pers. (12 rouleaux)', diff:'Moyen',
+    ingredients:[
+      ['12','galettes de riz'],['150 g','vermicelles de riz'],['250 g','crevettes'],
+      ['200 g','poitrine de porc'],['1','salade'],['1 botte','menthe + coriandre'],
+      ['1/2','concombre'],['3 c. à s.','sauce hoisin'],['1 c. à s.','beurre de cacahuète'],['1 poignée','cacahuètes concassées']
+    ],
+    steps:[
+      'Faites cuire la poitrine de porc 25 min à l\'eau frémissante, égouttez et taillez en fines lamelles.',
+      'Faites cuire les crevettes jusqu\'à ce qu\'elles soient bien roses, puis coupez-les en deux dans la longueur.',
+      'Réhydratez les vermicelles selon le paquet. Lavez soigneusement salade et herbes ; détaillez le concombre en bâtonnets.',
+      'Trempez une galette de riz dans l\'eau tiède quelques secondes. Garnissez de salade, vermicelles, porc, herbes, puis posez deux moitiés de crevette et roulez serré en repliant les côtés.',
+      'Pour la sauce : délayez le hoisin et le beurre de cacahuète avec un peu d\'eau chaude, parsemez de cacahuètes. Servez les rouleaux frais.'
+    ],
+    tip:'Sécurité : crevettes et porc bien cuits et crudités lavées — adapté à la grossesse.'
+  },
+  {
+    cat:'monde', tag:'Vietnam', motif:'bowl', color:'linear-gradient(135deg,#D58A6A,#A65638)',
+    title:'Phở bò — soupe de bœuf vietnamienne',
+    desc:'Le bouillon parfumé du Vietnam, dans une version maison simplifiée.',
+    time:'2 h', serves:'4 pers.', diff:'Avancé',
+    ingredients:[
+      ['1 kg','os de bœuf + jarret'],['2','oignons'],['1 morceau','gingembre'],
+      ['3','anis étoilés'],['1','bâton de cannelle'],['3','clous de girofle'],['1 c. à s.','graines de coriandre'],
+      ['3 c. à s.','sauce nuoc-mâm'],['400 g','nouilles de riz'],['300 g','bœuf (gîte ou macreuse)'],
+      ['','coriandre, basilic thaï, ciboule, citron vert']
+    ],
+    steps:[
+      'Faites noircir les oignons coupés en deux et le gingembre directement sur le feu ou sous le gril, pour parfumer le bouillon.',
+      'Plongez les os 2 min dans l\'eau bouillante, jetez cette eau et rincez-les (le bouillon sera plus clair).',
+      'Couvrez les os d\'eau froide, ajoutez oignons et gingembre grillés et les épices torréfiées. Laissez frémir 1 h 30 à 2 h en écumant régulièrement.',
+      'Assaisonnez le bouillon avec la sauce nuoc-mâm, un peu de sucre et de sel. Filtrez-le.',
+      'Cuisez les nouilles, répartissez-les dans les bols avec le bœuf taillé fin. Versez le bouillon bouillant et garnissez d\'herbes, de ciboule et de citron vert.'
+    ],
+    tip:'Sécurité : traditionnellement le bœuf est saignant et cuit par le bouillon ; pendant la grossesse, faites-le cuire entièrement en le laissant mijoter dans le bouillon.'
+  },
+  {
+    cat:'monde', tag:'Chine', motif:'bowl', color:'linear-gradient(135deg,#D96B5C,#A8392E)',
+    title:'Poulet Kung Pao (Gōngbǎo jīdīng)',
+    desc:'Le grand classique du Sichuan : poulet sauté, cacahuètes croquantes, sauce aigre-douce relevée.',
+    time:'25 min', serves:'2 pers.', diff:'Moyen',
+    ingredients:[
+      ['300 g','poulet en dés'],['1 c. à s.','sauce soja'],['1 c. à s.','vin de riz (Shaoxing)'],
+      ['1 c. à c.','fécule'],['60 g','cacahuètes'],['6','piments rouges séchés'],
+      ['1 c. à c.','poivre du Sichuan'],['2','gousses d\'ail'],['1 morceau','gingembre'],
+      ['2','cébettes'],['1 c. à s.','vinaigre noir'],['1 c. à s.','sucre']
+    ],
+    steps:[
+      'Faites mariner le poulet 10 min avec la sauce soja, le vin de riz et la fécule.',
+      'Préparez la sauce : mélangez vinaigre noir, sucre, un trait de sauce soja et un peu d\'eau avec une pointe de fécule.',
+      'Dans un wok très chaud, faites revenir les piments séchés et le poivre du Sichuan dans l\'huile jusqu\'à ce qu\'ils embaument.',
+      'Ajoutez le poulet et saisissez à feu vif jusqu\'à ce qu\'il soit cuit à cœur. Ajoutez ail, gingembre et le blanc des cébettes.',
+      'Versez la sauce, laissez épaissir 30 secondes, ajoutez les cacahuètes, mélangez et servez aussitôt avec du riz.'
+    ],
+    tip:'Astuce : bien cuit à cœur, ce plat convient aussi pendant la grossesse — réduisez le piment selon le goût.'
+  },
+  {
+    cat:'monde', tag:'Thaïlande', motif:'bowl', color:'linear-gradient(135deg,#E2A85C,#C06B2E)',
+    title:'Pad Thaï aux crevettes',
+    desc:'Les nouilles de riz sautées emblématiques : l\'équilibre parfait sucré, salé, acidulé.',
+    time:'30 min', serves:'2 pers.', diff:'Moyen',
+    ingredients:[
+      ['150 g','nouilles de riz plates'],['200 g','crevettes'],['100 g','tofu ferme'],['2','œufs'],
+      ['1 poignée','pousses de soja'],['1 botte','ciboulette'],['3 c. à s.','cacahuètes concassées'],
+      ['3 c. à s.','pâte de tamarin'],['2 c. à s.','sucre de palme'],['2 c. à s.','sauce poisson'],['1','citron vert']
+    ],
+    steps:[
+      'Faites tremper les nouilles 10 min dans l\'eau tiède jusqu\'à ce qu\'elles s\'assouplissent.',
+      'Préparez la sauce : faites fondre ensemble tamarin, sucre de palme et sauce poisson dans une petite casserole.',
+      'Dans un wok chaud, saisissez les crevettes et le tofu en dés, puis poussez-les sur le côté.',
+      'Cassez les œufs au centre, brouillez-les, puis ajoutez les nouilles égouttées et la sauce. Faites sauter jusqu\'à absorption.',
+      'Ajoutez pousses de soja, ciboulette et cacahuètes, mélangez. Servez avec un quartier de citron vert.'
+    ],
+    tip:'Astuce : crevettes et œufs bien cuits — adapté à la grossesse.'
+  },
+  {
+    cat:'monde', tag:'Japon', motif:'bowl', color:'linear-gradient(135deg,#8090B8,#414E7C)',
+    title:'Poulet teriyaki',
+    desc:'Cuisses de poulet laquées d\'une sauce brillante sucrée-salée (ratio d\'or 2:2:1:1).',
+    time:'20 min', serves:'2 pers.', diff:'Facile',
+    ingredients:[
+      ['2','cuisses de poulet désossées'],['1 c. à s.','fécule (facultatif)'],['1 c. à s.','huile'],
+      ['2 c. à s.','sauce soja'],['2 c. à s.','saké'],['1 c. à s.','sucre'],['1 c. à s.','mirin']
+    ],
+    steps:[
+      'Incisez la peau du poulet et farinez-le légèrement de fécule pour une peau croustillante.',
+      'Saisissez-le côté peau dans l\'huile à feu moyen, 4–5 min, jusqu\'à belle coloration.',
+      'Retournez, couvrez et laissez cuire 4–5 min, jusqu\'à ce que la chair soit cuite à cœur. Essuyez l\'excès de gras.',
+      'Ajoutez sauce soja, saké, sucre et mirin. Laissez réduire 2–3 min en remuant, jusqu\'à une sauce brillante et nappante.',
+      'Tranchez et nappez de sauce. Servez sur du riz.'
+    ],
+    tip:'Astuce : cuit à cœur, ce plat convient aussi pendant la grossesse.'
+  },
+  {
+    cat:'monde', tag:'Corée', motif:'bowl', color:'linear-gradient(135deg,#E08A3C,#A8501F)',
+    title:'Bibimbap',
+    desc:'Le bol coréen par excellence : riz, légumes assaisonnés, bœuf et sauce gochujang.',
+    time:'40 min', serves:'2 pers.', diff:'Moyen',
+    ingredients:[
+      ['2 bols','riz cuit'],['150 g','bœuf émincé'],['1','carotte'],['2 poignées','épinards'],
+      ['1','courgette'],['1 poignée','pousses de soja'],['2','œufs'],
+      ['2 c. à s.','gochujang'],['1 c. à s.','huile de sésame'],['1 c. à c.','sucre'],['1 c. à s.','graines de sésame']
+    ],
+    steps:[
+      'Faites sauter séparément chaque légume lavé (carotte en julienne, courgette en lamelles, épinards et pousses de soja blanchis), avec un peu d\'huile et de sel.',
+      'Faites revenir le bœuf avec un trait de sauce soja et d\'huile de sésame, jusqu\'à cuisson complète.',
+      'Préparez la sauce : mélangez gochujang, huile de sésame, sucre, graines de sésame et un peu d\'eau.',
+      'Faites cuire les œufs au plat jusqu\'à ce que le jaune soit ferme.',
+      'Disposez le riz dans chaque bol, arrangez légumes, bœuf et œuf par-dessus, ajoutez la sauce. Mélangez bien avant de déguster.'
+    ],
+    tip:'Sécurité : pendant la grossesse, cuisez l\'œuf (jaune ferme) et le bœuf entièrement — évitez les versions saignantes ou à jaune coulant.'
+  },
+  {
+    cat:'monde', tag:'Italie', motif:'wheat', color:'linear-gradient(135deg,#E6C36A,#B98A2E)',
+    title:'Spaghetti alla carbonara',
+    desc:'Le classique romain, sans crème : jaunes d\'œufs, guanciale, pecorino et poivre.',
+    time:'20 min', serves:'2 pers.', diff:'Moyen',
+    ingredients:[
+      ['200 g','spaghetti'],['100 g','guanciale'],['4','jaunes d\'œufs'],
+      ['50 g','pecorino romano râpé'],['','poivre noir']
+    ],
+    steps:[
+      'Faites cuire les spaghetti dans une grande casserole d\'eau salée.',
+      'Taillez le guanciale en lardons et faites-le rissoler dans une poêle chaude, sans matière grasse, jusqu\'à ce qu\'il soit doré et croustillant.',
+      'Battez les jaunes d\'œufs avec le pecorino râpé et beaucoup de poivre noir.',
+      'Égouttez les pâtes en gardant un peu d\'eau de cuisson. Hors du feu, mélangez pâtes, guanciale et crème d\'œufs, en ajoutant un peu d\'eau de cuisson pour obtenir une sauce nappante sans cuire l\'œuf.',
+      'Servez aussitôt avec un supplément de pecorino et de poivre.'
+    ],
+    tip:'Sécurité : la carbonara ne cuit l\'œuf que par la chaleur des pâtes ; dans sa version traditionnelle, elle n\'est pas recommandée pendant la grossesse (jaunes à peine cuits).'
+  },
+  {
+    cat:'monde', tag:'Mexique', motif:'bowl', color:'linear-gradient(135deg,#C76B45,#8E3A22)',
+    title:'Tinga de pollo',
+    desc:'Le plat de Puebla : poulet effiloché dans une sauce tomate-chipotle fumée.',
+    time:'40 min', serves:'4 pers.', diff:'Facile',
+    ingredients:[
+      ['500 g','blancs de poulet'],['1','oignon'],['2','gousses d\'ail'],['4','tomates mûres'],
+      ['2','piments chipotle en adobo'],['1','feuille de laurier'],['1 c. à s.','huile'],
+      ['','sel'],['','tortillas de maïs (service)']
+    ],
+    steps:[
+      'Pochez le poulet 18–22 min avec une demi-oignon, l\'ail, le laurier et du sel. Égouttez (gardez un peu de bouillon) et effilochez-le.',
+      'Mixez les tomates avec les chipotles et un peu de bouillon jusqu\'à obtenir une sauce.',
+      'Émincez le reste de l\'oignon en lamelles et faites-le revenir dans l\'huile, puis versez la sauce et laissez-la cuire 5 min.',
+      'Ajoutez le poulet effiloché, mélangez et laissez mijoter 10 min jusqu\'à ce que la sauce épaississe et nappe la viande.',
+      'Servez sur des tortillas de maïs, en tacos ou tostadas.'
+    ],
+    tip:'Astuce : poulet bien cuit — adapté à la grossesse. Dosez le chipotle selon le piquant souhaité.'
+  },
+  {
+    cat:'monde', tag:'Inde', motif:'bowl', color:'linear-gradient(135deg,#E2A24C,#B86A1E)',
+    title:'Butter chicken (Murgh makhani)',
+    desc:'Le grand classique indien : poulet mariné au yaourt dans une sauce crémeuse à la tomate.',
+    time:'45 min', serves:'4 pers.', diff:'Moyen',
+    ingredients:[
+      ['600 g','poulet en morceaux'],['4 c. à s.','yaourt'],['2 c. à s.','pâte ail-gingembre'],
+      ['1','citron'],['50 g','beurre'],['1','oignon'],['400 g','purée de tomate'],
+      ['40 g','noix de cajou'],['10 cl','crème'],['1 c. à c.','garam masala'],['1 c. à s.','fenugrec séché (kasuri methi)']
+    ],
+    steps:[
+      'Faites mariner le poulet 1 h avec le yaourt, le jus de citron, la pâte ail-gingembre et la moitié du garam masala.',
+      'Saisissez le poulet à la poêle jusqu\'à ce qu\'il soit cuit à cœur, réservez.',
+      'Faites fondre le beurre, faites-y revenir l\'oignon, ajoutez la purée de tomate et les noix de cajou mixées. Laissez mijoter 10 min, puis mixez la sauce jusqu\'à ce qu\'elle soit lisse.',
+      'Remettez le poulet dans la sauce, ajoutez la crème, le reste du garam masala et le fenugrec. Laissez mijoter 10 min.',
+      'Servez avec du riz basmati ou du naan.'
+    ],
+    tip:'Astuce : poulet bien cuit à cœur — adapté à la grossesse (yaourt et crème pasteurisés conviennent).'
   }
 ];
 
@@ -340,13 +677,26 @@ const grid = document.getElementById('grid');
 const tabs = [...document.querySelectorAll('.tab')];
 const care = document.getElementById('careBanner');
 let current = 'all';
+let query = '';
+
+function matchesQuery(r){
+  if(!query) return true;
+  const hay = (r.title+' '+r.desc+' '+r.tag+' '+r.ingredients.map(i=>i[1]).join(' ')).toLowerCase();
+  return query.split(/\s+/).every(w=>hay.includes(w));
+}
 
 document.getElementById('cAll').textContent = recipes.length;
 document.getElementById('cSaison').textContent = recipes.filter(r=>r.cat==='saison').length;
 document.getElementById('cPreg').textContent = recipes.filter(r=>r.cat==='preg').length;
+document.getElementById('cMonde').textContent = recipes.filter(r=>r.cat==='monde').length;
 
 function render(){
-  const list = recipes.filter(r=>current==='all'||r.cat===current);
+  const list = recipes.filter(r=>(current==='all'||r.cat===current) && matchesQuery(r));
+  if(list.length===0){
+    grid.innerHTML = '<div class="empty"><b>Aucune recette trouvée</b>Essayez un autre mot-clé ou un autre onglet.</div>';
+    care.classList.toggle('show', current==='preg');
+    return;
+  }
   grid.innerHTML = list.map((r,i)=>{
     const idx = recipes.indexOf(r);
     const badges = r.badges ? '<div class="badges">'+r.badges.map(b=>'<span class="badge">'+b+'</span>').join('')+'</div>' : '';
@@ -372,6 +722,11 @@ tabs.forEach(t=>t.addEventListener('click',()=>{
   current = t.dataset.filter;
   render();
 }));
+
+document.getElementById('search').addEventListener('input',e=>{
+  query = e.target.value.trim().toLowerCase();
+  render();
+});
 
 /* ---------- Modal ---------- */
 const overlay = document.getElementById('overlay');
