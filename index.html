@@ -32,24 +32,83 @@
   }
   .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
 
-  /* ---------- Header ---------- */
-  header.top{padding:46px 0 26px}
-  .brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-  .brand .mark{
-    font-family:"Fraunces",serif;font-weight:600;font-size:clamp(30px,5vw,46px);
-    letter-spacing:-0.02em;line-height:1;color:var(--green-deep);
+  /* ---------- Hero (bannière d'accueil) ---------- */
+  .site-hero{
+    position:relative;
+    margin:22px 0 8px;
+    border-radius:22px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    box-shadow:var(--shadow);
+    display:flex;
+    /* Repli : dégradé vert de la charte si img/hero.jpg est absente */
+    background:linear-gradient(135deg,var(--green) 0%,var(--green-deep) 100%);
   }
-  .brand .mark em{font-style:italic;font-weight:400;color:var(--peach-deep)}
+  /* Couche image : ancrée à gauche pour garder la composition culinaire visible.
+     Si l'image manque, cette couche reste transparente et le dégradé vert apparaît. */
+  .site-hero-media{
+    position:absolute;inset:0;z-index:0;
+    background-image:url("img/hero.jpg");
+    background-size:cover;
+    background-position:left center;
+    background-repeat:no-repeat;
+  }
+  /* Voile clair renforcé à droite, derrière le texte, pour la lisibilité */
+  .site-hero-media::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(90deg,
+      rgba(251,248,241,0) 30%,
+      rgba(251,248,241,.74) 58%,
+      rgba(251,248,241,.94) 100%);
+  }
+  .site-hero-inner{
+    position:relative;z-index:1;
+    margin-left:auto;                 /* pousse le bloc texte à droite */
+    width:min(56%,540px);
+    min-height:clamp(230px,32vw,330px);
+    padding:26px 32px;
+    display:flex;flex-direction:column;justify-content:center;align-items:flex-end;
+    text-align:right;gap:13px;
+  }
+  .site-hero .mark{
+    font-family:"Fraunces",serif;font-weight:600;font-size:clamp(30px,5vw,46px);
+    letter-spacing:-0.02em;line-height:1.04;color:var(--green-deep);
+    text-shadow:0 1px 3px rgba(251,248,241,.65);
+  }
+  .site-hero .mark em{font-style:italic;font-weight:400;color:var(--peach-deep)}
   .season-chip{
     display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;
     color:var(--green-deep);background:var(--green-soft);
     padding:6px 12px;border-radius:999px;
   }
   .season-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
-  .tagline{margin-top:14px;color:var(--ink-soft);font-size:16px;max-width:54ch}
-  .hero-banner{margin:22px 0 4px;border-radius:22px;overflow:hidden;border:1px solid var(--line);
-    height:clamp(170px,26vw,280px)}
-  .hero-banner img{width:100%;height:100%;object-fit:cover;display:block}
+  .tagline{color:var(--ink-soft);font-size:16px;max-width:40ch;
+    text-shadow:0 1px 2px rgba(251,248,241,.7)}
+
+  /* Mobile : photo en haut, texte dessous sur fond papier (lisibilité garantie) */
+  @media (max-width:640px){
+    .site-hero{flex-direction:column}
+    .site-hero-media{
+      position:relative;height:clamp(150px,42vw,210px);
+    }
+    .site-hero-media::after{
+      background:linear-gradient(180deg,rgba(251,248,241,0) 55%,rgba(251,248,241,.35) 100%);
+    }
+    .site-hero-inner{
+      width:100%;min-height:0;
+      margin-left:0;
+      align-items:flex-start;text-align:left;
+      background:var(--paper);
+      padding:18px 20px 20px;
+    }
+    .site-hero .mark{text-shadow:none}
+    .tagline{text-shadow:none;max-width:none}
+  }
+
+  /* Respect de prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+  }
 
   /* ---------- Tabs ---------- */
   nav.tabs{
@@ -234,14 +293,12 @@
 <body>
 
 <div class="wrap">
-  <header class="top">
-    <div class="brand">
-      <span class="mark">Le Carnet <em>de Saison</em></span>
+  <header class="site-hero">
+    <div class="site-hero-media" role="img" aria-label="Composition culinaire de saison : légumes grillés, herbes fraîches et fruits d'été disposés sur une table en bois"></div>
+    <div class="site-hero-inner">
       <span class="season-chip"><span class="dot"></span><span id="seasonLabel">Été · Juin</span></span>
-    </div>
-    <p class="tagline">Des recettes simples au rythme des saisons, et une sélection de plats pensés pour la grossesse — bien cuits, équilibrés, gourmands.</p>
-    <div class="hero-banner">
-      <img src="img/hero.jpg" alt="Le Carnet de Saison" loading="lazy" onerror="this.closest('.hero-banner').remove()">
+      <h1 class="mark">Le Carnet <em>de Saison</em></h1>
+      <p class="tagline">Des recettes simples au rythme des saisons, et une sélection de plats pensés pour la grossesse — bien cuits, équilibrés, gourmands.</p>
     </div>
   </header>
 </div>
