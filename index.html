@@ -102,8 +102,11 @@
   }
   .card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
   .card:focus-visible{outline:2.5px solid var(--green);outline-offset:3px}
-  .card .top{height:128px;position:relative;display:flex;align-items:flex-end;padding:14px}
+  .card .top{height:128px;position:relative;display:flex;align-items:flex-end;padding:14px;overflow:hidden}
   .card .top svg.motif{position:absolute;right:-12px;top:-10px;opacity:.5}
+  .photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1}
+  .pill{position:relative;z-index:2}
+  .close{z-index:3}
   .card .pill{
     font-size:12px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;
     background:rgba(255,255,255,.82);padding:5px 10px;border-radius:999px;color:var(--green-deep);
@@ -129,7 +132,7 @@
     border-radius:22px 22px 0 0;transform:translateY(24px);transition:transform .24s ease;
   }
   .overlay.show .sheet{transform:translateY(0)}
-  .sheet .hero{height:96px;display:flex;align-items:flex-end;padding:16px 22px;position:relative}
+  .sheet .hero{height:96px;display:flex;align-items:flex-end;padding:16px 22px;position:relative;overflow:hidden}
   .sheet .hero svg.motif{position:absolute;right:6px;top:-6px;opacity:.55}
   .close{
     position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;
@@ -747,6 +750,15 @@ document.getElementById('cSaison').textContent = recipes.filter(r=>r.cat==='sais
 document.getElementById('cPreg').textContent = recipes.filter(r=>r.cat==='preg').length;
 document.getElementById('cMonde').textContent = recipes.filter(r=>r.cat==='monde').length;
 
+function slug(s){
+  return s.normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-+)|(-+$)/g,'');
+}
+function photoTag(r){
+  // Affiche img/{slug}.jpg si elle existe ; sinon se retire pour révéler le motif coloré.
+  return `<img class="photo" src="img/${slug(r.title)}.jpg" alt="${r.title}" loading="lazy" onerror="this.remove()">`;
+}
+
 function render(){
   const list = recipes.filter(r=>(current==='all'||r.cat===current) && matchesQuery(r));
   if(list.length===0){
@@ -760,6 +772,7 @@ function render(){
     return `<button class="card ${r.cat==='preg'?'preg':''}" data-i="${idx}">
       <div class="top" style="background:${r.color}">
         ${svgMotif(r.motif).replace('class="motif"','class="motif" style="color:rgba(255,255,255,.85)"')}
+        ${photoTag(r)}
         <span class="pill">${r.tag}</span>
       </div>
       <div class="body">
@@ -802,6 +815,7 @@ function openRecipe(r){
   sheet.innerHTML = `
     <div class="hero" style="background:${r.color}">
       ${svgMotif(r.motif).replace('class="motif"','class="motif" style="color:rgba(255,255,255,.85)"')}
+      ${photoTag(r)}
       <button class="close" id="closeBtn" aria-label="Fermer">×</button>
       <span class="pill">${r.tag}</span>
     </div>
