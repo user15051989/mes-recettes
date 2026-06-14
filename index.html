@@ -47,6 +47,9 @@
   }
   .season-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
   .tagline{margin-top:14px;color:var(--ink-soft);font-size:16px;max-width:54ch}
+  .hero-banner{margin:22px 0 4px;border-radius:22px;overflow:hidden;border:1px solid var(--line);
+    height:clamp(170px,26vw,280px)}
+  .hero-banner img{width:100%;height:100%;object-fit:cover;display:block}
 
   /* ---------- Tabs ---------- */
   nav.tabs{
@@ -237,6 +240,9 @@
       <span class="season-chip"><span class="dot"></span><span id="seasonLabel">Été · Juin</span></span>
     </div>
     <p class="tagline">Des recettes simples au rythme des saisons, et une sélection de plats pensés pour la grossesse — bien cuits, équilibrés, gourmands.</p>
+    <div class="hero-banner">
+      <img src="img/hero.jpg" alt="Le Carnet de Saison" loading="lazy" onerror="this.closest('.hero-banner').remove()">
+    </div>
   </header>
 </div>
 
